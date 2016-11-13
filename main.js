@@ -99,8 +99,86 @@ app.post("/events", function (request, response) {
     response.status(201).location("../events/"+events.id).send(); 
 });
 
+app.get("/opleiding", function (request, response) {
+    response.send(store.listopleiding());
+});
 
 
+app.get("/opleiding/:id", function (request, response) {
+    var opleiding = store.searcopleiding(request.params.id);
+    if (opleiding) {
+        response.send(opleiding);
+    } else {
+        response.status(404).send();
+    }
+});
+
+
+app.post("/opleiding", function (request, response) {
+    var opleiding = request.body;
+
+   
+    var uniqueID = shortid.generate(); /
+    opleiding.id = opleiding.drone.id + uniqueID;
+
+
+    store.addopleiding();
+    response.status(201).location("../opleiding/"+opleiding.id).send(); 
+});
+// hiet
+app.get("/locatie", function (request, response) {
+    response.send(store.listlocatie());
+});
+
+
+app.get("/locatie/:id", function (request, response) {
+    var locatie = store.searchlocatie(request.params.id);
+    if (locatie) {
+        response.send(locatie);
+    } else {
+        response.status(404).send();
+    }
+});
+
+
+app.post("/locatie", function (request, response) {
+    var locatie = request.body;
+
+   
+    var uniqueID = shortid.generate(); /
+    locatie.id = locatie.drone.id + uniqueID;
+
+
+    store.addlocatie();
+    response.status(201).location("../locatie/"+locatie.id).send(); 
+});
+//haat
+app.get("/devices ", function (request, response) {
+    response.send(store.listdevices ());
+});
+
+
+app.get("/devices /:id", function (request, response) {
+    var devices  = store.searchdevices (request.params.id);
+    if (devices ) {
+        response.send(devices );
+    } else {
+        response.status(404).send();
+    }
+});
+
+
+app.post("/devices ", function (request, response) {
+    var devices  = request.body;
+
+   
+    var uniqueID = shortid.generate(); /
+    devices .id = devices .drone.id + uniqueID;
+
+
+    store.adddevices ();
+    response.status(201).location("../devices /"+devices .id).send(); 
+});
 
 
 // Start the webservice on port 3000
