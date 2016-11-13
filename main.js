@@ -1,13 +1,3 @@
-/**
- * Created by yannickvanoekelen on 13/11/16.
- */
-// Following extensions/dependancies need to be installed via "npm install {extension} --save" in terminal
-// Express - webservice (default on webstorm application)
-// Parser - parse body from HTTP requests
-// (The information above comes from LSteffens github)
-/// Shortid - unique ID generator -->  check package.json under 'dependancies'
-
-
 // Load the necessary extensions
 var express = require('express');
 var parser = require('body-parser');
@@ -54,35 +44,64 @@ app.post("/drones", function (request, response) {
 });
 
 
-//-------------------------------------------------------------------------------------------------------------------//
-// 08 MEASUREMENTS
-// GET requests on /measurements
-app.get("/measurements", function (request, response) {
-    response.send(store.listMeasurements());
+
+app.get("/weer", function (request, response) {
+    response.send(store.listweer());
 });
 
-// GET requests on /measurements with ID => /measurements/:id
-app.get("/measurements/:id", function (request, response) {
-    var measurement = store.searchMeasurements(request.params.id);
-    if (measurement) {
-        response.send(measurement); // If a measurement is found, return this measurement
+
+app.get("/weer/:id", function (request, response) {
+    var weer = store.searchweer(request.params.id);
+    if (weer) {
+        response.send(weer);
     } else {
-        response.status(404).send(); // If no measurement is found, return code 404 'page not found'
+        response.status(404).send();
     }
 });
 
-// POST request on /measurements
-app.post("/measurements", function (request, response) {
-    var measurement = request.body;
 
-    // ID is chosen by the server, it is a combination of the droneID and a unique generated ID
-    var uniqueID = shortid.generate(); //This line generates the unique ID
-    measurement.id = measurement.drone.id + uniqueID;
+app.post("/weer", function (request, response) {
+    var weer = request.body;
 
-    // add the measurement to the store
-    store.addMeasurement();
-    response.status(201).location("../measurements/"+measurement.id).send(); //Respond with the 201 status 'Created' and give the URL of the created measurement.
+   
+    var uniqueID = shortid.generate(); /
+    weer.id = weer.drone.id + uniqueID;
+
+
+    store.addweer();
+    response.status(201).location("../weer/"+weer.id).send(); 
 });
+
+app.get("/events", function (request, response) {
+    response.send(store.listevents());
+});
+
+
+app.get("/events/:id", function (request, response) {
+    var events = store.searcevents(request.params.id);
+    if (events) {
+        response.send(events);
+    } else {
+        response.status(404).send();
+    }
+});
+
+
+app.post("/events", function (request, response) {
+    var events = request.body;
+
+   
+    var uniqueID = shortid.generate(); /
+    events.id = events.drone.id + uniqueID;
+
+
+    store.addevents();
+    response.status(201).location("../events/"+events.id).send(); 
+});
+
+
+
+
 
 // Start the webservice on port 3000
 app.listen(3000);
